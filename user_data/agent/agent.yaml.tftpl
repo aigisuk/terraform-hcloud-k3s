@@ -1,0 +1,29 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+
+# Disable password authentication for root user
+ssh_pwauth: false
+
+# Write out base64 encoded k3s install script to /root/agent_install_k3s.sh
+write_files:
+- encoding: gzip+base64
+  content: ${agent_config}
+  owner: root:root
+  path: /etc/rancher/k3s/config.yaml
+  permissions: '0644'
+  #defer: true
+
+# Install required packages
+packages:
+  - ca-certificates
+  - curl
+  - ntp
+  - wireguard
+
+# Install K3s
+runcmd:
+  # run k3s install script
+  #- bash /root/agent_install_k3s.sh
+  - curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC=agent INSTALL_K3S_CHANNEL=${k3s_channel} sh -

@@ -1,0 +1,28 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+
+# Disable password authentication for root user
+ssh_pwauth: false
+
+# Write out base64 encoded k3s install script to /root/install_k3s.sh
+write_files:
+- encoding: gzip+base64
+  content: ${install_script}
+  owner: root:root
+  path: /root/server_install_k3s.sh
+  permissions: '0755'
+  #defer: true
+
+# Install required packages
+packages:
+  - ca-certificates
+  - curl
+  - ntp
+  - wireguard
+
+# Install K3s
+runcmd:
+  # run k3s install script
+  - bash /root/server_install_k3s.sh

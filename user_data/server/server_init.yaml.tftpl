@@ -1,0 +1,59 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+
+# Disable password authentication for root user
+ssh_pwauth: false
+
+# Write out base64 encoded k3s install script to /root/install_k3s.sh
+write_files:
+- encoding: gzip+base64
+  content: ${install_script}
+  owner: root:root
+  path: /root/install_k3s.sh
+  permissions: '0755'
+  #defer: true
+- content: ${ccm_tpl}
+  encoding: gzip+base64
+  path: /root/manifests/hcloud_ccm.yaml
+  permissions: '0600'
+- content: ${csi_tpl}
+  encoding: gzip+base64
+  path: /root/manifests/hcloud_csi.yaml
+  permissions: '0600'
+${k8s_dashboard}
+${sys_upgrade_ctrl}
+${cert_manager}
+  # write k3s keys
+%{ for ca_keys_key, ca_keys_value in ca_keys ~}
+- content: ${ca_keys_value}
+  encoding: gzip+base64
+  path: /var/lib/rancher/k3s/server/tls/${ca_keys_key}-ca.key
+  permissions: '0600'
+%{ endfor ~}
+  # write k3s certificates
+%{ for ca_certs_key, ca_certs_value in ca_certs ~}
+- content: ${ca_certs_value}
+  encoding: gzip+base64
+  path: /var/lib/rancher/k3s/server/tls/${ca_certs_key}-ca.crt
+  permissions: '0644'
+%{ endfor ~}
+
+
+# Install required packages
+packages:
+  - ca-certificates
+  - curl
+  - ntp
+  - wireguard
+
+# Install K3s
+runcmd:
+  # run k3s install script
+  - bash /root/install_k3s.sh
+  # Create hcloud token secret
+  - kubectl -n kube-system create secret generic hcloud --from-literal=token=${hcloud_token} --from-literal=network=${k3s_net_id}
+  - kubectl apply -f /root/manifests/
+  - echo "WAITING" && sleep 10
+  - kubectl apply -f /root/post_install/
