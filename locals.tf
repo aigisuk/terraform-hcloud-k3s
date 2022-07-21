@@ -66,11 +66,39 @@ locals {
 
   client-key-data = tls_private_key.keys["client-admin"].private_key_pem
 
-  kubeconfig = templatefile("${path.module}/kubeconfig.yaml.tftpl", {
-    certificate-authority-data = base64encode(local.certificate-authority-data)
-    client-certificate-data    = base64encode(local.client-certificate-data)
-    client-key-data            = base64encode(local.client-key-data)
-    k3s_lb_ip                  = hcloud_load_balancer.k3s_api_lb.ipv4
+  # kubeconfig = templatefile("${path.module}/kubeconfig.yaml.tftpl", {
+  #   certificate-authority-data = base64encode(local.certificate-authority-data)
+  #   client-certificate-data    = base64encode(local.client-certificate-data)
+  #   client-key-data            = base64encode(local.client-key-data)
+  #   k3s_lb_ip                  = hcloud_load_balancer.k3s_api_lb.ipv4
+  # })
+
+  kubeconfig = yamlencode({
+    "apiVersion" : "v1",
+    "clusters" : [{
+      "cluster" : {
+        "certificate-authority-data" : base64encode(local.certificate-authority-data),
+        "server" : "https://${hcloud_load_balancer.k3s_api_lb.ipv4}:6443"
+      },
+      "name" : "default"
+    }]
+    "contexts" : [{
+      "context" : {
+        "cluster" : "default",
+        "user" : "default"
+      },
+      "name" : "default"
+    }]
+    "current-context" : "default",
+    "kind" : "Config",
+    "preferences" : {},
+    "users" : [{
+      "name" : "default",
+      "user" : {
+        "client-certificate-data" : base64encode(local.client-certificate-data),
+        "client-key-data" : base64encode(local.client-key-data)
+      }
+    }]
   })
 
   # The following IPs are important to be whitelisted because they communicate with Hetzner services and enable the CCM and CSI to work properly.
