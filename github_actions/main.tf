@@ -21,7 +21,9 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-provider "hcloud" {}
+provider "hcloud" {
+  token = var.hcloud_token
+}
 
 module "hcloud_k3s" {
   source = "git::https://github.com/aigisuk/terraform-hcloud-k3s.git?ref=develop"
