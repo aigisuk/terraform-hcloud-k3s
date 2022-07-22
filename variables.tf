@@ -56,7 +56,7 @@ variable "flannel_backend" {
 variable "server_count" {
   type        = number
   description = "Number of server (master) nodes to provision"
-  default     = 2
+  default     = 3
 }
 
 variable "agent_nodepools" {
@@ -81,7 +81,7 @@ variable "k8s_dashboard" {
 variable "k8s_dashboard_version" {
   type        = string
   description = "Kubernetes Dashboard version"
-  default     = "2.4.0" # https://github.com/kubernetes/dashboard/releases
+  default     = "2.6.0" # https://github.com/kubernetes/dashboard/releases
 }
 
 variable "sys_upgrade_ctrl" {

@@ -3,7 +3,7 @@ output "local_agent_nodepools" {
 }
 
 output "kubeconfig" {
-  description = "Kube Config for cluster"
+  description = "Cluster default kubeconfig"
   value       = local.kubeconfig
   sensitive   = true
 }
