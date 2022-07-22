@@ -30,7 +30,9 @@ jobs:
             \`\`\`diff
             ${process.env.TF_FMT_STDOUT}
             \`\`\`
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -68,7 +70,9 @@ jobs:
           script: |
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             \`\`\`${ process.env.TF_INIT_STDERR }\`\`\`
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -92,7 +96,9 @@ jobs:
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             \`\`\`${ process.env.TF_VAL_STDERR }\`\`\`
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -116,10 +122,15 @@ jobs:
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             #### Terraform Plan 📖 - \`${{ steps.plan.outcome }}\`
+
             <details><summary>Show Plan</summary>
+
             \`\`\`${process.env.PLAN}\`\`\`
+
             </details>
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
