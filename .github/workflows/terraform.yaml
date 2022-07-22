@@ -9,17 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3.0.2
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Format
         id: fmt
         run: terraform fmt -diff -check -no-color -recursive
         continue-on-error: true
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6.1.0
         if: github.event_name == 'pull_request' && steps.fmt.outputs.exitcode != 0
         env:
           TF_FMT_STDOUT: "${{ steps.fmt.outputs.stdout }}"
@@ -31,7 +31,7 @@ jobs:
             ${process.env.TF_FMT_STDOUT}
             \`\`\`
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -46,10 +46,10 @@ jobs:
       WORKING_DIR: "github_actions"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3.0.2
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         continue-on-error: true
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6.1.0
         if: github.event_name == 'pull_request' && steps.init.outputs.exitcode != 0
         env:
           TF_INIT_STDERR: "${{ steps.init.outputs.stderr }}"
@@ -69,7 +69,7 @@ jobs:
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             \`\`\`${ process.env.TF_INIT_STDERR }\`\`\`
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -82,7 +82,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         continue-on-error: true
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6.1.0
         if: github.event_name == 'pull_request' && steps.validate.outputs.exitcode != 0
         env:
           TF_VAL_STDERR: "${{ steps.validate.outputs.stderr }}"
@@ -93,7 +93,7 @@ jobs:
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             \`\`\`${ process.env.TF_VAL_STDERR }\`\`\`
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -106,7 +106,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         continue-on-error: true
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6.1.0
         if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
@@ -120,7 +120,7 @@ jobs:
             \`\`\`${process.env.PLAN}\`\`\`
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
