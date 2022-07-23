@@ -26,5 +26,5 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 | Name | Description |
 |------|-------------|
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | Cluster default kubeconfig |
-| <a name="output_local_agent_nodepools"></a> [local\_agent\_nodepools](#output\_local\_agent\_nodepools) | n/a |
+| <a name="output_local_agent_nodepools"></a> [local\_agent\_nodepools](#output\_local\_agent\_nodepools) | Configuration of provisioned agent nodes |
 <!-- END_TF_DOCS -->
