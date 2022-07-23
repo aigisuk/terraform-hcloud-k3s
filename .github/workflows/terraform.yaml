@@ -6,6 +6,7 @@ on:
 jobs:
   docs:
     name: Generate & Inject Inputs/Outputs Table
+    needs: [terraform-fmt, terraform-plan]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
