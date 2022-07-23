@@ -35,8 +35,7 @@ locals {
 
   agent_count = sum([for v in var.agent_nodepools : v.count])
 
-  # Manifest templates
-
+  # --- START k3s Manifest Templates ---
   # Kubernetes Dashboard
   k8s_dash_yaml_tpl = var.k8s_dashboard == true ? templatefile("${path.module}/manifests/templates/cloud-init/write_k8s_dash.tftpl", {
     k8s_dash_yaml = base64gzip(file("${path.module}/manifests/kubernetes_dashboard.yaml"))
@@ -51,6 +50,7 @@ locals {
   cert_manager_yaml_tpl = var.install_cert_manager == true ? templatefile("${path.module}/manifests/templates/cloud-init/write_cert_manager.tftpl", {
     cert_manager_yaml = base64gzip(file("${path.module}/manifests/cert_manager.yaml"))
   }) : ""
+  # --- END k3s Manifest Templates ---
 
   # Kubeconfig TLS Resources
   ca_names = toset(["server", "client", "request-header"])
@@ -66,13 +66,7 @@ locals {
 
   client-key-data = tls_private_key.keys["client-admin"].private_key_pem
 
-  # kubeconfig = templatefile("${path.module}/kubeconfig.yaml.tftpl", {
-  #   certificate-authority-data = base64encode(local.certificate-authority-data)
-  #   client-certificate-data    = base64encode(local.client-certificate-data)
-  #   client-key-data            = base64encode(local.client-key-data)
-  #   k3s_lb_ip                  = hcloud_load_balancer.k3s_api_lb.ipv4
-  # })
-
+  # Generate Default Kubeconfig
   kubeconfig = yamlencode({
     "apiVersion" : "v1",
     "clusters" : [{

@@ -66,6 +66,7 @@ spec:
             - "--leader-elect=false"
             - "--allow-untagged-cloud"
             - "--allocate-node-cidrs=true"
+            - "--feature-gates=ServiceNodeExclusion=true"
             - "--cluster-cidr=${cluster_cidr_ipv4}"
           resources:
             requests:

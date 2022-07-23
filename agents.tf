@@ -16,7 +16,7 @@ resource "hcloud_server" "agent_node" {
     type        = "agent"
   }
   # Prevent destroying the whole cluster if the user changes any of the attributes
-  # that force to recreate the servers or network ip's/mac addresses.
+  # that force recreation of servers or network ip's/mac addresses.
   lifecycle {
     ignore_changes = [
       location,
@@ -27,7 +27,6 @@ resource "hcloud_server" "agent_node" {
   }
   network {
     network_id = hcloud_network.k3s_net.id
-    #ip         = "10.1.0.3"
   }
   user_data = templatefile("${path.module}/user_data/agent/agent.yaml.tftpl", {
     k3s_channel = each.value.channel

@@ -11,7 +11,7 @@ resource "hcloud_server" "server_node" {
   labels = {
     provisioner = "terraform",
     engine      = "k3s"
-    type        = local.server_label
+    type        = "server"
   }
   # Prevent destroying the whole cluster if the user changes any of the attributes
   # that force to recreate the servers or network ip's/mac addresses.
@@ -29,7 +29,7 @@ resource "hcloud_server" "server_node" {
   }
   user_data = templatefile("${path.module}/user_data/server/server.yaml.tftpl", {
     install_script = base64gzip(templatefile("${path.module}/user_data/server/server_install.sh", {
-      sleep_period           = (30 * count.index) # Server nodes cannot join the cluster (etcd) simultaneously. Sleep workaround (unreliable) avoids a join failure.
+      sleep_period           = (30 * count.index) # Server nodes cannot join the cluster (etcd) simultaneously. Sleep workaround avoids a join failure. (Note: unreliable method)
       server_init_private_ip = hcloud_server.server_node_init[0].network.*.ip[0]
       k3s_channel            = var.k3s_channel
       k3s_token              = random_password.k3s_token.result
