@@ -15,7 +15,6 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 | <a name="input_k3s_channel"></a> [k3s\_channel](#input\_k3s\_channel) | K3s release channel. 'stable', 'latest', 'testing' or a specific channel or version e.g. 'v1.20', 'v1.21.0+k3s1' | `string` | `"stable"` | no |
 | <a name="input_k3s_network_range"></a> [k3s\_network\_range](#input\_k3s\_network\_range) | Range of IP addresses for the network in CIDR notation. Must be one of the private ipv4 ranges of RFC1918 | `string` | `"10.0.0.0/8"` | no |
 | <a name="input_k8s_dashboard"></a> [k8s\_dashboard](#input\_k8s\_dashboard) | Pre-install the Kubernetes Dashboard? (Default is false) | `bool` | `false` | no |
-| <a name="input_k8s_dashboard_version"></a> [k8s\_dashboard\_version](#input\_k8s\_dashboard\_version) | Kubernetes Dashboard version | `string` | `"2.6.0"` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location in which to provision the cluster. Default is nbg1 (Nuremberg, Germany) | `string` | `"nbg1"` | no |
 | <a name="input_server_count"></a> [server\_count](#input\_server\_count) | Number of server (master) nodes to provision | `number` | `3` | no |
 | <a name="input_server_taint_criticalonly"></a> [server\_taint\_criticalonly](#input\_server\_taint\_criticalonly) | Allow only critical addons to be scheduled on servers? (thus preventing workloads from being launched on them) | `bool` | `true` | no |
