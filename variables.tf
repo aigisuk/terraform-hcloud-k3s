@@ -78,12 +78,6 @@ variable "k8s_dashboard" {
   default     = false
 }
 
-variable "k8s_dashboard_version" {
-  type        = string
-  description = "Kubernetes Dashboard version"
-  default     = "2.6.0" # https://github.com/kubernetes/dashboard/releases
-}
-
 variable "sys_upgrade_ctrl" {
   type        = bool
   description = "Pre-install the System Upgrade Controller?"
