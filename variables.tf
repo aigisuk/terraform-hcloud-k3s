@@ -73,7 +73,7 @@ variable "server_taint_criticalonly" {
 
 variable "k8s_dashboard" {
   type        = bool
-  description = "Pre-install the Kubernetes Dashboard? (Default is false)"
+  description = "Pre-install the Kubernetes Dashboard?"
   default     = false
 }
 
