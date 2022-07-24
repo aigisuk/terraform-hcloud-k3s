@@ -25,7 +25,6 @@ jobs:
   terraform-fmt:
     name: Terraform Format
     runs-on: ubuntu-latest
-    needs: [docs]
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
@@ -82,7 +81,7 @@ jobs:
             throw "failed to run `terraform fmt -check -recursive -diff`"
   terraform-plan:
     name: Terraform Initialize, Validate, Plan
-    needs: [terraform-fmt, docs]
+    needs: [terraform-fmt]
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: "github_actions"
