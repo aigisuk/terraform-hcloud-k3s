@@ -60,7 +60,7 @@ variable "server_count" {
 }
 
 variable "agent_nodepools" {
-  description = "Agent nodepools configuration"
+  description = "Configure Agent nodepools"
   type        = list(any)
   default     = []
 }
