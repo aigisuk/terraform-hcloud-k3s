@@ -1,5 +1,6 @@
 output "local_agent_nodepools" {
-  value = local.agent_nodes
+  description = "Configuration of provisioned agent nodepools"
+  value       = local.agent_nodes
 }
 
 output "kubeconfig" {

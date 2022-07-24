@@ -45,11 +45,11 @@ variable "k3s_channel" {
 
 variable "flannel_backend" {
   type        = string
-  description = "Flannel Backend Type. Valid options include vxlan (default), ipsec or wireguard"
+  description = "Flannel Backend Type. Valid options include vxlan (default), ipsec, wireguard or wireguard-native"
   default     = "vxlan"
   validation {
     condition     = length(regexall("^ipsec|vxlan|wireguard|wireguard-native$", var.flannel_backend)) > 0
-    error_message = "Invalid Flannel backend value. Valid backend types are vxlan, ipsec & wireguard."
+    error_message = "Invalid Flannel backend value. Valid backend types are vxlan, ipsec, wireguard & wireguard-native."
   }
 }
 
@@ -60,28 +60,21 @@ variable "server_count" {
 }
 
 variable "agent_nodepools" {
-  description = "Number of agent nodes to provision"
+  description = "Configure Agent nodepools"
   type        = list(any)
   default     = []
 }
 
-
 variable "server_taint_criticalonly" {
   type        = bool
-  description = "Allow only critical addons to be scheduled on servers? (thus preventing workloads from being launched on them)"
+  description = "Allow only critical addons to be scheduled on servers? (prevents workloads being launched on them)"
   default     = true
 }
 
 variable "k8s_dashboard" {
   type        = bool
-  description = "Pre-install the Kubernetes Dashboard? (Default is false)"
+  description = "Pre-install the Kubernetes Dashboard?"
   default     = false
-}
-
-variable "k8s_dashboard_version" {
-  type        = string
-  description = "Kubernetes Dashboard version"
-  default     = "2.6.0" # https://github.com/kubernetes/dashboard/releases
 }
 
 variable "sys_upgrade_ctrl" {

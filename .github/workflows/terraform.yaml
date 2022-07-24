@@ -4,9 +4,28 @@ on:
   pull_request:
 
 jobs:
+  docs:
+    name: Generate & Inject Inputs/Outputs Table
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ secrets.DOCS_PAT }}
+
+    - name: Render terraform docs inside the README.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1
+      with:
+        working-dir: .
+        config-file: .terraform-docs.yaml
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
   terraform-fmt:
     name: Terraform Format
     runs-on: ubuntu-latest
+    needs: [docs]
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
@@ -26,6 +45,17 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
+
+            // 2. Prepare format of the comment
             const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
             \`\`\`diff
             ${process.env.TF_FMT_STDOUT}
@@ -33,16 +63,26 @@ jobs:
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
             throw "failed to run `terraform fmt -check -recursive -diff`"
   terraform-plan:
     name: Terraform Initialize, Validate, Plan
-    needs: terraform-fmt
+    needs: [terraform-fmt]
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: "github_actions"
@@ -68,17 +108,38 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+            })
+
+            // 2. Prepare format of the comment
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             \`\`\`${ process.env.TF_INIT_STDERR }\`\`\`
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
             throw "failed to run `terraform init`"
       - name: Terraform Validate
         id: validate
@@ -93,18 +154,39 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+            })
+
+            // 2. Prepare format of the comment
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             \`\`\`${ process.env.TF_VAL_STDERR }\`\`\`
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
             throw "failed to run `terraform validate`"
       - name: Terraform Plan
         id: plan
@@ -119,6 +201,17 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+            })
+
+            // 2. Prepare format of the comment
             const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             #### Terraform Plan 📖 - \`${{ steps.plan.outcome }}\`
@@ -131,12 +224,22 @@ jobs:
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1

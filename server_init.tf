@@ -11,7 +11,7 @@ resource "hcloud_server" "server_node_init" {
   labels = {
     provisioner = "terraform",
     engine      = "k3s"
-    type        = local.server_label
+    type        = "server"
   }
   network {
     network_id = hcloud_network.k3s_net.id
