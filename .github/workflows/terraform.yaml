@@ -42,7 +42,7 @@ jobs:
         env:
           TF_FMT_STDOUT: "${{ steps.fmt.outputs.stdout }}"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DOCS_PAT }}
           script: |
             // 1. Retrieve existing bot comments for the PR
             const { data: comments } = await github.rest.issues.listComments({
@@ -105,7 +105,7 @@ jobs:
         env:
           TF_INIT_STDERR: "${{ steps.init.outputs.stderr }}"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DOCS_PAT }}
           script: |
             // 1. Retrieve existing bot comments for the PR
             const { data: comments } = await github.rest.issues.listComments({
@@ -151,7 +151,7 @@ jobs:
         env:
           TF_VAL_STDERR: "${{ steps.validate.outputs.stderr }}"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DOCS_PAT }}
           script: |
             // 1. Retrieve existing bot comments for the PR
             const { data: comments } = await github.rest.issues.listComments({
@@ -198,7 +198,7 @@ jobs:
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DOCS_PAT }}
           script: |
             // 1. Retrieve existing bot comments for the PR
             const { data: comments } = await github.rest.issues.listComments({
