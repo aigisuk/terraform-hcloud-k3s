@@ -45,7 +45,7 @@ variable "k3s_channel" {
 
 variable "flannel_backend" {
   type        = string
-  description = "Flannel Backend Type. Valid options include vxlan (default), ipsec or wireguard"
+  description = "Flannel Backend Type. Valid options include vxlan (default), ipsec, wireguard or wireguard-native"
   default     = "vxlan"
   validation {
     condition     = length(regexall("^ipsec|vxlan|wireguard|wireguard-native$", var.flannel_backend)) > 0
