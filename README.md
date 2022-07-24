@@ -9,7 +9,7 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 | <a name="input_hcloud_token"></a> [hcloud\_token](#input\_hcloud\_token) | Hetzner Cloud API Token | `string` | n/a | yes |
 | <a name="input_ssh_private_key"></a> [ssh\_private\_key](#input\_ssh\_private\_key) | SSH private Key | `string` | n/a | yes |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | SSH Public Key | `string` | n/a | yes |
-| <a name="input_agent_nodepools"></a> [agent\_nodepools](#input\_agent\_nodepools) | Agent nodepool configuration | `list(any)` | `[]` | no |
+| <a name="input_agent_nodepools"></a> [agent\_nodepools](#input\_agent\_nodepools) | Agent nodepools configuration | `list(any)` | `[]` | no |
 | <a name="input_flannel_backend"></a> [flannel\_backend](#input\_flannel\_backend) | Flannel Backend Type. Valid options include vxlan (default), ipsec, wireguard or wireguard-native | `string` | `"vxlan"` | no |
 | <a name="input_install_cert_manager"></a> [install\_cert\_manager](#input\_install\_cert\_manager) | Pre-install cert-manager? | `bool` | `false` | no |
 | <a name="input_k3s_channel"></a> [k3s\_channel](#input\_k3s\_channel) | K3s release channel. 'stable', 'latest', 'testing' or a specific channel or version e.g. 'v1.20', 'v1.21.0+k3s1' | `string` | `"stable"` | no |
