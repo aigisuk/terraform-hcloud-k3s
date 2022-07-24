@@ -10,7 +10,7 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 | <a name="input_ssh_private_key"></a> [ssh\_private\_key](#input\_ssh\_private\_key) | SSH private Key | `string` | n/a | yes |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | SSH Public Key | `string` | n/a | yes |
 | <a name="input_agent_nodepools"></a> [agent\_nodepools](#input\_agent\_nodepools) | Number of agent nodes to provision | `list(any)` | `[]` | no |
-| <a name="input_flannel_backend"></a> [flannel\_backend](#input\_flannel\_backend) | Flannel Backend Type. Valid options include vxlan (default), ipsec or wireguard | `string` | `"vxlan"` | no |
+| <a name="input_flannel_backend"></a> [flannel\_backend](#input\_flannel\_backend) | Flannel Backend Type. Valid options include vxlan (default), ipsec, wireguard or wireguard-native | `string` | `"vxlan"` | no |
 | <a name="input_install_cert_manager"></a> [install\_cert\_manager](#input\_install\_cert\_manager) | Pre-install cert-manager? | `bool` | `false` | no |
 | <a name="input_k3s_channel"></a> [k3s\_channel](#input\_k3s\_channel) | K3s release channel. 'stable', 'latest', 'testing' or a specific channel or version e.g. 'v1.20', 'v1.21.0+k3s1' | `string` | `"stable"` | no |
 | <a name="input_k3s_network_range"></a> [k3s\_network\_range](#input\_k3s\_network\_range) | Range of IP addresses for the network in CIDR notation. Must be one of the private ipv4 ranges of RFC1918 | `string` | `"10.0.0.0/8"` | no |
