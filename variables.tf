@@ -49,7 +49,7 @@ variable "flannel_backend" {
   default     = "vxlan"
   validation {
     condition     = length(regexall("^ipsec|vxlan|wireguard|wireguard-native$", var.flannel_backend)) > 0
-    error_message = "Invalid Flannel backend value. Valid backend types are vxlan, ipsec & wireguard."
+    error_message = "Invalid Flannel backend value. Valid backend types are vxlan, ipsec, wireguard & wireguard-native."
   }
 }
 
@@ -64,7 +64,6 @@ variable "agent_nodepools" {
   type        = list(any)
   default     = []
 }
-
 
 variable "server_taint_criticalonly" {
   type        = bool
