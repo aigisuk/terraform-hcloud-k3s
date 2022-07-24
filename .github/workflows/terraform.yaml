@@ -6,14 +6,12 @@ on:
 jobs:
   docs:
     name: Generate & Inject Inputs/Outputs Table
-    needs: [terraform-fmt, terraform-plan]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
         ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ secrets.DOCS_PAT }}
 
     - name: Render terraform docs inside the README.md and push changes back to PR branch
       uses: terraform-docs/gh-actions@v1
@@ -26,6 +24,7 @@ jobs:
   terraform-fmt:
     name: Terraform Format
     runs-on: ubuntu-latest
+    needs: [docs]
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
@@ -82,7 +81,7 @@ jobs:
             throw "failed to run `terraform fmt -check -recursive -diff`"
   terraform-plan:
     name: Terraform Initialize, Validate, Plan
-    needs: terraform-fmt
+    needs: [terraform-fmt, docs]
     runs-on: ubuntu-latest
     env:
       WORKING_DIR: "github_actions"
