@@ -67,7 +67,7 @@ variable "agent_nodepools" {
 
 variable "server_taint_criticalonly" {
   type        = bool
-  description = "Allow only critical addons to be scheduled on servers? (prevents workloads being launched on them)"
+  description = "Allow only critical addons to be scheduled on servers?"
   default     = true
 }
 
