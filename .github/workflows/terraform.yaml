@@ -40,6 +40,7 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -diff -check -no-color -recursive
+        working-directory: ./
         continue-on-error: true
 
       - name: Terraform Init
