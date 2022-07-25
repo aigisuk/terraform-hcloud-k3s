@@ -22,16 +22,20 @@ jobs:
         output-file: README.md
         output-method: inject
         git-push: "true"
-  terraform-fmt:
-    name: Terraform Format
-    runs-on: ubuntu-latest
+  terraform:
+    name: Terraform Format, Initialize, Validate, Plan
     needs: [docs]
+    runs-on: ubuntu-latest
+    env:
+      WORKING_DIR: "github_actions"
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Format
         id: fmt
@@ -57,6 +61,7 @@ jobs:
 
             // 2. Prepare format of the comment
             const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
+
             \`\`\`diff
             ${process.env.TF_FMT_STDOUT}
             \`\`\`
@@ -80,20 +85,6 @@ jobs:
               })
             }
             throw "failed to run `terraform fmt -check -recursive -diff`"
-  terraform-plan:
-    name: Terraform Initialize, Validate, Plan
-    needs: [terraform-fmt]
-    runs-on: ubuntu-latest
-    env:
-      WORKING_DIR: "github_actions"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3.0.2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
         id: init
@@ -115,11 +106,12 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
             })
 
             // 2. Prepare format of the comment
-            const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
+            const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             \`\`\`${ process.env.TF_INIT_STDERR }\`\`\`
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workdir: \`${{ env.WORKING_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
@@ -161,11 +153,12 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
             })
 
             // 2. Prepare format of the comment
-            const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
+            const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             \`\`\`${ process.env.TF_VAL_STDERR }\`\`\`
 
@@ -208,11 +201,12 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
             })
 
             // 2. Prepare format of the comment
-            const output = `#### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
+            const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️ - \`${{ steps.init.outcome }}\`
             #### Terraform Validate 📃 - \`${{ steps.validate.outcome }}\`
             #### Terraform Plan 📖 - \`${{ steps.plan.outcome }}\`
 

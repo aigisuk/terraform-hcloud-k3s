@@ -17,7 +17,7 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 | <a name="input_k8s_dashboard"></a> [k8s\_dashboard](#input\_k8s\_dashboard) | Pre-install the Kubernetes Dashboard? | `bool` | `false` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location in which to provision the cluster. Default is nbg1 (Nuremberg, Germany) | `string` | `"nbg1"` | no |
 | <a name="input_server_count"></a> [server\_count](#input\_server\_count) | Number of server (master) nodes to provision | `number` | `3` | no |
-| <a name="input_server_taint_criticalonly"></a> [server\_taint\_criticalonly](#input\_server\_taint\_criticalonly) | Allow only critical addons to be scheduled on servers? (prevents workloads being launched on them) | `bool` | `true` | no |
+| <a name="input_server_taint_criticalonly"></a> [server\_taint\_criticalonly](#input\_server\_taint\_criticalonly) | Allow only critical addons to be scheduled on servers? | `bool` | `true` | no |
 | <a name="input_ssh_public_key_name"></a> [ssh\_public\_key\_name](#input\_ssh\_public\_key\_name) | SSH Public Key Name | `string` | `"default"` | no |
 | <a name="input_sys_upgrade_ctrl"></a> [sys\_upgrade\_ctrl](#input\_sys\_upgrade\_ctrl) | Pre-install the System Upgrade Controller? | `bool` | `false` | no |
 
