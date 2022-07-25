@@ -41,19 +41,16 @@ jobs:
         id: fmt
         run: terraform fmt -diff -check -no-color -recursive
         working-directory: ./
-        continue-on-error: true
 
       - name: Terraform Init
         id: init
         run: terraform init -no-color
         working-directory: ${{ env.WORKING_DIR }}
-        continue-on-error: true
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
         working-directory: ${{ env.WORKING_DIR }}
-        continue-on-error: true
 
       - name: Terraform Plan
         id: plan
