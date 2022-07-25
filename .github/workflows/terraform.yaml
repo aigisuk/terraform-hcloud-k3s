@@ -61,6 +61,7 @@ jobs:
 
             // 2. Prepare format of the comment
             const output = `#### Terraform Format and Style 🖌 - \`${{ steps.fmt.outcome }}\`
+
             \`\`\`diff
             ${process.env.TF_FMT_STDOUT}
             \`\`\`
