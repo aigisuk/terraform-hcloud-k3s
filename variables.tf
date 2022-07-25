@@ -27,7 +27,7 @@ variable "location" {
   default     = "nbg1"
   validation {
     condition     = length(regexall("^nbg1|fsn1|hel1|ash$", var.location)) > 0
-    error_message = "Invalid location. Valid locations include nbg1 (default), fsn1, hel2, ash."
+    error_message = "Invalid location. Valid locations include nbg1 (default), fsn1, hel2, ash"
   }
 }
 
